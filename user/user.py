@@ -2,28 +2,16 @@
 from flask import Flask, render_template, request, jsonify, make_response
 import requests
 import json
-from werkzeug.exceptions import NotFound
-
-# CALLING gRPC requests
-import grpc
-from concurrent import futures
-import booking_pb2
-import booking_pb2_grpc
-import movie_pb2
-import movie_pb2_grpc
-
-# CALLING GraphQL requests
-# todo to complete
 
 app = Flask(__name__)
 
 PORT = 3203
 HOST = '0.0.0.0'
 
-MOVIE_SERVICE_URL = "http://localhost:3200"
+MOVIE_SERVICE_URL = "http://localhost:3001"
 BOOKING_SERVICE_URL = "http://localhost:3201"
 
-with open('{}/databases/users.json'.format("."), "r") as jsf:
+with open('{}/data/users.json'.format("."), "r") as jsf:
     users = json.load(jsf)["users"]
 
 
@@ -52,9 +40,12 @@ def get_detailed_userbookings(userid):
         movie_infos = []
         for booking in user_bookings["dates"]:
             for movie in booking["movies"]:
-                movie_response = requests.get(f"{MOVIE_SERVICE_URL}/movies/{movie}")
+                movie_response = requests.post(f"{MOVIE_SERVICE_URL}/graphql",
+                                               json={"query": "{ movie_with_id(_id: \"%s\") { id title director "
+                                                              "rating actors {id firstname"
+                                                              " lastname birthyear films} } }" % movie})
                 movie_infos.append(movie_response.json())
-
+        movie_infos = [movie['data']['movie_with_id'] for movie in movie_infos]
         movie_info_map = {movie['id']: movie for movie in movie_infos}
         for date_info in user_bookings['dates']:
             for i, movie_id in enumerate(date_info['movies']):
