@@ -36,12 +36,15 @@ def get_user_byid(userid):
 def create_user():
     req = request.get_json()
 
-    if req["id"] not in [user["id"] for user in users]:
-        users.append(req)
-        res = make_response(jsonify(req), 200)
-        return res
+    if all(key in req for key in ["id", "name", "last_active"]):
+        if req["id"] not in [user["id"] for user in users]:
+            users.append(req)
+            res = make_response(jsonify(req), 200)
+            return res
+        else:
+            return make_response(jsonify({"error": "user already exists"}), 400)
     else:
-        return make_response(jsonify({"error": "user already exists"}), 400)
+        return make_response(jsonify({"error": "invalid user object format"}), 400)
 
 
 @app.route("/user/<userid>", methods=['PUT'])
@@ -50,8 +53,8 @@ def update_user(userid):
 
     for user in users:
         if str(user["id"]) == str(userid):
-            user.remove(req)
-            user.append(req)
+            user["name"] = req.get("name", user["name"])
+            user["last_active"] = req.get("last_active", user["last_active"])
             res = make_response(jsonify(req), 200)
             return res
     return make_response(jsonify({"error": "user ID not found"}), 400)
