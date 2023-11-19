@@ -50,7 +50,8 @@ def update_user(userid):
 
     for user in users:
         if str(user["id"]) == str(userid):
-            user.update(req)
+            user.remove(req)
+            user.append(req)
             res = make_response(jsonify(req), 200)
             return res
     return make_response(jsonify({"error": "user ID not found"}), 400)
