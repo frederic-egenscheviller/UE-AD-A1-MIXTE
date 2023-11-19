@@ -13,7 +13,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\rbooking.proto\"\x17\n\tBookingID\x12\n\n\x02id\x18\x01 \x01(\t\"\x13\n\x05Movie\x12\n\n\x02id\x18\x01 \x01(\t\"0\n\x08Schedule\x12\x0c\n\x04\x64\x61te\x18\x01 \x01(\t\x12\x16\n\x06movies\x18\x02 \x03(\x0b\x32\x06.Movie\";\n\x0b\x42ookingData\x12\x0e\n\x06userId\x18\x01 \x01(\t\x12\x1c\n\tschedules\x18\x02 \x03(\x0b\x32\t.Schedule\"\x07\n\x05\x45mpty2\x90\x01\n\x07\x42ooking\x12+\n\x0fGetListBookings\x12\x06.Empty\x1a\x0c.BookingData\"\x00\x30\x01\x12,\n\x0eGetBookingByID\x12\n.BookingID\x1a\x0c.BookingData\"\x00\x12*\n\nAddBooking\x12\x0c.BookingData\x1a\x0c.BookingData\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\rbooking.proto\"\x17\n\tBookingID\x12\n\n\x02id\x18\x01 \x01(\t\"\x13\n\x05Movie\x12\n\n\x02id\x18\x01 \x01(\t\"0\n\x08Schedule\x12\x0c\n\x04\x64\x61te\x18\x01 \x01(\t\x12\x16\n\x06movies\x18\x02 \x03(\x0b\x32\x06.Movie\";\n\x0b\x42ookingData\x12\x0e\n\x06userId\x18\x01 \x01(\t\x12\x1c\n\tschedules\x18\x02 \x03(\x0b\x32\t.Schedule\"\x07\n\x05\x45mpty2\xec\x01\n\x07\x42ooking\x12+\n\x0fGetListBookings\x12\x06.Empty\x1a\x0c.BookingData\"\x00\x30\x01\x12,\n\x0eGetBookingByID\x12\n.BookingID\x1a\x0c.BookingData\"\x00\x12*\n\nAddBooking\x12\x0c.BookingData\x1a\x0c.BookingData\"\x00\x12-\n\rUpdateBooking\x12\x0c.BookingData\x1a\x0c.BookingData\"\x00\x12+\n\rDeleteBooking\x12\n.BookingID\x1a\x0c.BookingData\"\x00\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -32,5 +32,5 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _globals['_EMPTY']._serialized_start=174
   _globals['_EMPTY']._serialized_end=181
   _globals['_BOOKING']._serialized_start=184
-  _globals['_BOOKING']._serialized_end=328
+  _globals['_BOOKING']._serialized_end=420
 # @@protoc_insertion_point(module_scope)
