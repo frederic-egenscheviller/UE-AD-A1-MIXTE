@@ -1,4 +1,3 @@
-# REST API
 import grpc
 from flask import Flask, render_template, request, jsonify, make_response
 from google.protobuf.json_format import MessageToJson
@@ -9,22 +8,40 @@ import booking_pb2_grpc
 
 app = Flask(__name__)
 
+# Configuration
 PORT = 3203
 HOST = '0.0.0.0'
 
+# Movie service URL
 MOVIE_SERVICE_URL = "http://localhost:3001"
 
+# Load initial users data from a JSON file
 with open('{}/data/users.json'.format("."), "r") as jsf:
     users = json.load(jsf)["users"]
 
 
 @app.route("/", methods=['GET'])
 def home():
+    """
+    Home route to welcome users.
+
+    Returns:
+        Response: HTML response with a welcome message.
+    """
     return "<h1 style='color:blue'>Welcome to the User service!</h1>"
 
 
 @app.route("/user/<userid>", methods=['GET'])
 def get_user_byid(userid):
+    """
+    Get user details by ID.
+
+    Args:
+        userid (str): The ID of the user.
+
+    Returns:
+        Response: JSON response with user details or an error message.
+    """
     for user in users:
         if str(user["id"]) == str(userid):
             res = make_response(jsonify(user), 200)
@@ -34,6 +51,12 @@ def get_user_byid(userid):
 
 @app.route("/user", methods=['POST'])
 def create_user():
+    """
+    Create a new user.
+
+    Returns:
+        Response: JSON response with the new user details or an error message.
+    """
     req = request.get_json()
 
     if all(key in req for key in ["id", "name", "last_active"]):
@@ -48,6 +71,15 @@ def create_user():
 
 @app.route("/user/<userid>", methods=['PUT'])
 def update_user(userid):
+    """
+    Update user details by ID.
+
+    Args:
+        userid (str): The ID of the user.
+
+    Returns:
+        Response: JSON response with the updated user details or an error message.
+    """
     req = request.get_json()
 
     if all(key in req for key in ["id", "name", "last_active"]):
@@ -62,6 +94,15 @@ def update_user(userid):
 
 @app.route("/user/<userid>", methods=['DELETE'])
 def delete_user(userid):
+    """
+    Delete user by ID.
+
+    Args:
+        userid (str): The ID of the user.
+
+    Returns:
+        Response: JSON response with the deleted user details or an error message.
+    """
     for user in users:
         if str(user["id"]) == str(userid):
             users.remove(user)
@@ -72,6 +113,15 @@ def delete_user(userid):
 
 @app.route("/user-bookings/<userid>", methods=['GET'])
 def get_user_bookings(userid):
+    """
+    Get user bookings using gRPC.
+
+    Args:
+        userid (str): The ID of the user.
+
+    Returns:
+        Response: JSON response with user bookings or an error message.
+    """
     with grpc.insecure_channel('localhost:3201') as channel:
         booking_response = booking_pb2_grpc.BookingStub(channel).GetBookingByID(booking_pb2.BookingID(id=userid))
         channel.close()
@@ -83,6 +133,15 @@ def get_user_bookings(userid):
 
 @app.route("/user-bookings/<userid>/detailed", methods=['GET'])
 def get_detailed_userbookings(userid):
+    """
+    Get detailed user bookings with movie information.
+
+    Args:
+        userid (str): The ID of the user.
+
+    Returns:
+        Response: JSON response with detailed user bookings or an error message.
+    """
     with grpc.insecure_channel('localhost:3201') as channel:
         booking_response = booking_pb2_grpc.BookingStub(channel).GetBookingByID(booking_pb2.BookingID(id=userid))
         channel.close()

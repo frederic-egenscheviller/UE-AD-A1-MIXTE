@@ -7,11 +7,22 @@ import json
 
 class BookingServicer(booking_pb2_grpc.BookingServicer):
 
+    # Load initial bookings data from a JSON file
     def __init__(self):
         with open('{}/data/bookings.json'.format("."), "r") as jsf:
             self.db = json.load(jsf)["bookings"]
 
     def GetBookingByID(self, request, context):
+        """
+        Get booking details by user ID.
+
+        Args:
+            request (booking_pb2.GetBookingByIDRequest): Request object containing the user ID.
+            context (grpc.ServicerContext): gRPC service context.
+
+        Returns:
+            booking_pb2.BookingData: Response object containing the booking details.
+        """
         for booking in self.db:
             if booking['userid'] == request.id:
                 print("Booking found!")
@@ -27,6 +38,16 @@ class BookingServicer(booking_pb2_grpc.BookingServicer):
         return booking_pb2.BookingData(userId="", schedules=[])
 
     def GetListBookings(self, request, context):
+        """
+        Get a list of all bookings.
+
+        Args:
+            request (booking_pb2.GetListBookingsRequest): Request object.
+            context (grpc.ServicerContext): gRPC service context.
+
+        Yields:
+            booking_pb2.BookingData: Response object containing booking details.
+        """
         for booking in self.db:
             schedules_list = []
             for date_info in booking['dates']:
@@ -37,39 +58,16 @@ class BookingServicer(booking_pb2_grpc.BookingServicer):
                 schedules_list.append(booking_pb2.Schedule(date=date, movies=movies_list))
             yield booking_pb2.BookingData(userId=booking['userid'], schedules=schedules_list)
 
-    def CreateBooking(self, request, context):
-        for booking in self.db:
-            if booking['id'] == request.id:
-                status = grpc.Status(grpc.StatusCode.INVALID_ARGUMENT, 'There is already a booking for this id')
-                context.set_code(status.code)
-                context.set_details(status.details)
-                return booking_pb2.BookingData(id=request.id, date=request.date, movies=request.movies)
-        self.db.append({'id': request.id, 'date': request.date, 'movies': request.movies})
-        return booking_pb2.BookingData(id=request.id, date=request.date, movies=request.movies)
-
-    def UpdateBooking(self, request, context):
-        for booking in self.db:
-            if booking['id'] == request.id:
-                booking['date'] = request.date
-                booking['movies'] = request.movies
-                return booking_pb2.BookingData(id=request.id, date=request.date, movies=request.movies)
-        status = grpc.Status(grpc.StatusCode.NOT_FOUND, 'There is no booking for this id')
-        context.set_code(status.code)
-        context.set_details(status.details)
-        return booking_pb2.BookingData(id="", date="", movies="")
-
-    def DeleteBooking(self, request, context):
-        for booking in self.db:
-            if booking['id'] == request.id:
-                self.db.remove(booking)
-                return booking_pb2.BookingData(id=request.id, date=request.date, movies=request.movies)
-        status = grpc.Status(grpc.StatusCode.NOT_FOUND, 'There is no booking for this id')
-        context.set_code(status.code)
-        context.set_details(status.details)
-        return booking_pb2.BookingData(id="", date="", movies="")
-
 
 def serve():
+    """
+    Start the gRPC server.
+
+    This function initializes the gRPC server, adds the BookingServicer to it, and starts the server.
+
+    Returns:
+        None
+    """
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     booking_pb2_grpc.add_BookingServicer_to_server(BookingServicer(), server)
     server.add_insecure_port('[::]:3201')

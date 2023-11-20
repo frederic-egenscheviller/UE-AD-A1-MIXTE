@@ -1,0 +1,240 @@
+openapi: 3.1.0
+info:
+  title: User Service API
+  description: This is the API of the User service
+  contact:
+    name: Frédéric EGENSCHEVILLER & Baptiste Laborde
+    email: frederic.egenscheviller@imt-atlantique.net & baptiste.laborde@imt-atlantique.net
+  license:
+    name: GPL v3
+    url: https://www.gnu.org/licenses/gpl-3.0.en.html
+  version: 1.0.0
+tags:
+  - name: users
+    description: Operations related to users
+  - name: bookings
+    description: Operations related to user bookings
+paths:
+  /:
+    get:
+      tags:
+        - users
+      summary: Home page of the service
+      operationId: home
+      responses:
+        "200":
+          description: Welcome message
+          content:
+            text/html:
+              schema:
+                type: string
+                example: "<h1 style='color:blue'>Welcome to the User service!</h1>"
+
+  /user/{userid}:
+    get:
+      tags:
+        - users
+      summary: Get user by ID
+      operationId: get_user_byid
+      parameters:
+        - name: userid
+          in: path
+          description: User ID
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "400":
+          description: User ID not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    post:
+      tags:
+        - users
+      summary: Create user
+      operationId: create_user
+      requestBody:
+        description: New user information
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        "200":
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "400":
+          description: Invalid user object format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      tags:
+        - users
+      summary: Update user by ID
+      operationId: update_user
+      parameters:
+        - name: userid
+          in: path
+          description: User ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Updated user information
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        "200":
+          description: User updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "400":
+          description: Invalid user object format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      tags:
+        - users
+      summary: Delete user by ID
+      operationId: delete_user
+      parameters:
+        - name: userid
+          in: path
+          description: User ID
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "400":
+          description: User ID not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /user-bookings/{userid}:
+    get:
+      tags:
+        - bookings
+      summary: Get user bookings
+      operationId: get_user_bookings
+      parameters:
+        - name: userid
+          in: path
+          description: User ID
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User bookings
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserBookings'
+        "400":
+          description: User ID not found in Booking service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /user-bookings/{userid}/detailed:
+    get:
+      tags:
+        - bookings
+      summary: Get detailed user bookings
+      operationId: get_detailed_userbookings
+      parameters:
+        - name: userid
+          in: path
+          description: User ID
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Detailed user bookings
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserBookingsDetailed'
+        "400":
+          description: User ID not found in Booking service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          example: fred_egen
+        name:
+          type: string
+          example: Fred Egen
+        last_active:
+          type: string
+          example: "1360031202"
+    UserBookings:
+      type: object
+      properties:
+        userid:
+          type: string
+          example: fred_egen
+        dates:
+          type: array
+          items:
+            type: string
+            example: "{\"date\": \"20151201\", \"movies\": [{\"title\": \"Creed\",\"rating\": 8.8,\"director\": \"Ryan Coogler\",\"id\": \"267eedb8-0f5d-42d5-8f43-72426b9fb3e6\"}]}"
+    UserBookingsDetailed:
+      type: object
+      properties:
+        userid:
+          type: string
+          example: fred_egen
+        dates:
+          type: array
+          items:
+            type: string
+            example: "{\"date\": \"20151201\", \"movies\": [\"267eedb8-0f5d-42d5-8f43-72426b9fb3e6\"]}"
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "User ID not found"

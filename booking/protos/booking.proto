@@ -3,9 +3,6 @@ syntax = "proto3";
 service Booking {
     rpc GetListBookings(Empty) returns (stream BookingData) {}
     rpc GetBookingByID(BookingID) returns (BookingData) {}
-    rpc AddBooking(BookingData) returns (BookingData) {}
-    rpc UpdateBooking(BookingData) returns (BookingData) {}
-    rpc DeleteBooking(BookingID) returns (BookingData) {}
 }
 
 message BookingID {
