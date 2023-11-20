@@ -25,7 +25,7 @@ class ShowtimeServicer(showtime_pb2_grpc.ShowtimeServicer):
             showtime_pb2.Schedule: gRPC response object containing the showtime schedule.
         """
         for showtime in self.db:
-            yield showtime_pb2.Schedule(date=showtime['date'], movies=showtime['movies'])
+            yield showtime_pb2.Schedules(date=showtime['date'], movies=showtime['movies'])
 
     def GetTimetableByDate(self, request, context):
         """
@@ -40,86 +40,9 @@ class ShowtimeServicer(showtime_pb2_grpc.ShowtimeServicer):
         """
         for showtime in self.db:
             if showtime['date'] == request.date:
-                return showtime_pb2.Schedule(date=showtime['date'], movies=showtime['movies'])
-        return showtime_pb2.Schedule(date='', movies=[])
-
-    def GetTimetableByTitle(self, request, context):
-        """
-        Get the showtime timetable for a specific movie title.
-
-        Args:
-            request: gRPC request object.
-            context: gRPC service context.
-
-        Returns:
-            showtime_pb2.Schedule: gRPC response object containing the showtime schedule for the given movie title.
-        """
-        for showtime in self.db:
-            for movie in showtime['movies']:
-                if movie['title'] == request.title:
-                    return showtime_pb2.Schedule(date=showtime['date'], movies=showtime['movies'])
-        return showtime_pb2.Schedule(date='', movies=[])
-
-    def CreateTimetable(self, request, context):
-        """
-        Create a new showtime timetable entry.
-
-        Args:
-            request: gRPC request object.
-            context: gRPC service context.
-
-        Returns:
-            showtime_pb2.Schedule: gRPC response object containing the created showtime schedule entry.
-        """
-        for showtime in self.db:
-            if showtime['date'] == request.date:
-                status = grpc.Status(StatusCode.INVALID_ARGUMENT, 'There is already a schedule for this date')
-                context.set_code(status.code)
-                context.set_details(status.details)
-                return showtime_pb2.Schedule(date=request.date, movies=request.movies)
-        self.db.append({'date': request.date, 'movies': request.movies})
-        return showtime_pb2.Schedule(date=request.date, movies=request.movies)
-
-    def UpdateTimetable(self, request, context):
-        """
-        Update an existing showtime timetable entry.
-
-        Args:
-            request: gRPC request object.
-            context: gRPC service context.
-
-        Returns:
-            showtime_pb2.Schedule: gRPC response object containing the updated showtime schedule entry.
-        """
-        for showtime in self.db:
-            if showtime['date'] == request.date:
-                showtime['movies'] = request.movies
-                return showtime_pb2.Schedule(date=request.date, movies=request.movies)
-        status = grpc.Status(StatusCode.NOT_FOUND, 'There is no schedule for this date')
-        context.set_code(status.code)
-        context.set_details(status.details)
-        return showtime_pb2.Schedule(date='', movies=[])
-
-    def DeleteTimetable(self, request, context):
-        """
-        Delete an existing showtime timetable entry.
-
-        Args:
-            request: gRPC request object.
-            context: gRPC service context.
-
-        Returns:
-            showtime_pb2.Schedule: gRPC response object containing the deleted showtime schedule entry.
-        """
-        for showtime in self.db:
-            if showtime['date'] == request.date:
-                self.db.remove(showtime)
-                return showtime_pb2.Schedule(date=request.date, movies=request.movies)
-        status = grpc.Status(StatusCode.NOT_FOUND, 'There is no schedule for this date')
-        context.set_code(status.code)
-        context.set_details(status.details)
-        return showtime_pb2.Schedule(date='', movies=[])
-
+                print('Showtime found!')
+                return showtime_pb2.Schedules(date=showtime['date'], movies=showtime['movies'])
+        return showtime_pb2.Schedules(date='', movies=[])
 
 def serve():
     """

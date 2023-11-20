@@ -111,6 +111,35 @@ def delete_user(userid):
     return make_response(jsonify({"error": "user ID not found"}), 400)
 
 
+@app.route("/booking", methods=['POST'])
+def create_booking():
+    """
+    Create a new booking using gRPC.
+
+    Returns:
+        Response: JSON response with the new booking details or an error message.
+    """
+    req = request.get_json()
+    if all(key in req for key in ["userid", "dates"]):
+        schedules_list = []
+        for date in req["dates"]:
+            movies_list = [booking_pb2.Movie(id=movie_id) for movie_id in date["movies"]]
+            schedules_list.append(booking_pb2.Schedule(date=date["date"], movies=movies_list))
+        with grpc.insecure_channel('localhost:3201') as channel:
+            booking_response = booking_pb2_grpc.BookingStub(channel).CreateBooking(
+                booking_pb2.BookingData(userId=req['userid'], schedules=schedules_list))
+            channel.close()
+            response = json.loads(MessageToJson(booking_response))
+            if response["userid"] == "Not add":
+                return make_response(jsonify({"error": "one of selected movies is not available for these date"}),
+                                     409)
+            if response["userid"] == "A booking already exists for this user":
+                return make_response(jsonify({"error": "booking already exists for this user"}), 400)
+
+            return make_response(MessageToJson(booking_response), 200)
+    return make_response(jsonify({"error": "invalid booking object format"}), 400)
+
+
 @app.route("/user-bookings/<userid>", methods=['GET'])
 def get_user_bookings(userid):
     """
@@ -126,7 +155,14 @@ def get_user_bookings(userid):
         booking_response = booking_pb2_grpc.BookingStub(channel).GetBookingByID(booking_pb2.BookingID(id=userid))
         channel.close()
         if booking_response.userId != "":
-            return make_response(MessageToJson(booking_response), 200)
+            response = json.loads(MessageToJson(booking_response))
+            booking_to_return = {"userid": response["userId"], "dates": []}
+            for schedule in response["schedules"]:
+                date_entry = {"date": schedule["date"], "movies": []}
+                for movie in schedule["movies"]:
+                    date_entry["movies"].append(movie["id"])
+                booking_to_return["dates"].append(date_entry)
+            return make_response(booking_to_return, 200)
         else:
             return make_response(jsonify({"error": "user ID not found in Booking service"}), 400)
 

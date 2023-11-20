@@ -16,33 +16,13 @@ class ShowtimeStub(object):
         """
         self.GetTimetable = channel.unary_stream(
                 '/Showtime/GetTimetable',
-                request_serializer=showtime__pb2.Empty.SerializeToString,
-                response_deserializer=showtime__pb2.Schedule.FromString,
+                request_serializer=showtime__pb2.EmptyStr.SerializeToString,
+                response_deserializer=showtime__pb2.Schedules.FromString,
                 )
         self.GetTimetableByDate = channel.unary_unary(
                 '/Showtime/GetTimetableByDate',
                 request_serializer=showtime__pb2.Date.SerializeToString,
-                response_deserializer=showtime__pb2.Schedule.FromString,
-                )
-        self.GetTimetableByTitle = channel.unary_stream(
-                '/Showtime/GetTimetableByTitle',
-                request_serializer=showtime__pb2.MovieTitle.SerializeToString,
-                response_deserializer=showtime__pb2.Slot.FromString,
-                )
-        self.CreateTimetable = channel.unary_unary(
-                '/Showtime/CreateTimetable',
-                request_serializer=showtime__pb2.Schedule.SerializeToString,
-                response_deserializer=showtime__pb2.Schedule.FromString,
-                )
-        self.UpdateTimetable = channel.unary_unary(
-                '/Showtime/UpdateTimetable',
-                request_serializer=showtime__pb2.Schedule.SerializeToString,
-                response_deserializer=showtime__pb2.Schedule.FromString,
-                )
-        self.DeleteTimetable = channel.unary_unary(
-                '/Showtime/DeleteTimetable',
-                request_serializer=showtime__pb2.Schedule.SerializeToString,
-                response_deserializer=showtime__pb2.Schedule.FromString,
+                response_deserializer=showtime__pb2.Schedules.FromString,
                 )
 
 
@@ -61,62 +41,18 @@ class ShowtimeServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def GetTimetableByTitle(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def CreateTimetable(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def UpdateTimetable(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def DeleteTimetable(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
 
 def add_ShowtimeServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'GetTimetable': grpc.unary_stream_rpc_method_handler(
                     servicer.GetTimetable,
-                    request_deserializer=showtime__pb2.Empty.FromString,
-                    response_serializer=showtime__pb2.Schedule.SerializeToString,
+                    request_deserializer=showtime__pb2.EmptyStr.FromString,
+                    response_serializer=showtime__pb2.Schedules.SerializeToString,
             ),
             'GetTimetableByDate': grpc.unary_unary_rpc_method_handler(
                     servicer.GetTimetableByDate,
                     request_deserializer=showtime__pb2.Date.FromString,
-                    response_serializer=showtime__pb2.Schedule.SerializeToString,
-            ),
-            'GetTimetableByTitle': grpc.unary_stream_rpc_method_handler(
-                    servicer.GetTimetableByTitle,
-                    request_deserializer=showtime__pb2.MovieTitle.FromString,
-                    response_serializer=showtime__pb2.Slot.SerializeToString,
-            ),
-            'CreateTimetable': grpc.unary_unary_rpc_method_handler(
-                    servicer.CreateTimetable,
-                    request_deserializer=showtime__pb2.Schedule.FromString,
-                    response_serializer=showtime__pb2.Schedule.SerializeToString,
-            ),
-            'UpdateTimetable': grpc.unary_unary_rpc_method_handler(
-                    servicer.UpdateTimetable,
-                    request_deserializer=showtime__pb2.Schedule.FromString,
-                    response_serializer=showtime__pb2.Schedule.SerializeToString,
-            ),
-            'DeleteTimetable': grpc.unary_unary_rpc_method_handler(
-                    servicer.DeleteTimetable,
-                    request_deserializer=showtime__pb2.Schedule.FromString,
-                    response_serializer=showtime__pb2.Schedule.SerializeToString,
+                    response_serializer=showtime__pb2.Schedules.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -140,8 +76,8 @@ class Showtime(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_stream(request, target, '/Showtime/GetTimetable',
-            showtime__pb2.Empty.SerializeToString,
-            showtime__pb2.Schedule.FromString,
+            showtime__pb2.EmptyStr.SerializeToString,
+            showtime__pb2.Schedules.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -158,74 +94,6 @@ class Showtime(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/Showtime/GetTimetableByDate',
             showtime__pb2.Date.SerializeToString,
-            showtime__pb2.Schedule.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def GetTimetableByTitle(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_stream(request, target, '/Showtime/GetTimetableByTitle',
-            showtime__pb2.MovieTitle.SerializeToString,
-            showtime__pb2.Slot.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def CreateTimetable(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/Showtime/CreateTimetable',
-            showtime__pb2.Schedule.SerializeToString,
-            showtime__pb2.Schedule.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def UpdateTimetable(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/Showtime/UpdateTimetable',
-            showtime__pb2.Schedule.SerializeToString,
-            showtime__pb2.Schedule.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def DeleteTimetable(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/Showtime/DeleteTimetable',
-            showtime__pb2.Schedule.SerializeToString,
-            showtime__pb2.Schedule.FromString,
+            showtime__pb2.Schedules.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

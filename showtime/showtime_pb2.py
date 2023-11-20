@@ -13,7 +13,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0eshowtime.proto\"(\n\x08Schedule\x12\x0c\n\x04\x64\x61te\x18\x01 \x01(\t\x12\x0e\n\x06movies\x18\x02 \x03(\t\"\x14\n\x04\x44\x61te\x12\x0c\n\x04\x64\x61te\x18\x01 \x01(\t\"\x07\n\x05\x45mpty\"\x1b\n\nMovieTitle\x12\r\n\x05title\x18\x01 \x01(\t\"\"\n\x04Slot\x12\x0c\n\x04\x64\x61te\x18\x01 \x01(\t\x12\x0c\n\x04time\x18\x02 \x01(\t2\x8b\x02\n\x08Showtime\x12%\n\x0cGetTimetable\x12\x06.Empty\x1a\t.Schedule\"\x00\x30\x01\x12(\n\x12GetTimetableByDate\x12\x05.Date\x1a\t.Schedule\"\x00\x12-\n\x13GetTimetableByTitle\x12\x0b.MovieTitle\x1a\x05.Slot\"\x00\x30\x01\x12)\n\x0f\x43reateTimetable\x12\t.Schedule\x1a\t.Schedule\"\x00\x12)\n\x0fUpdateTimetable\x12\t.Schedule\x1a\t.Schedule\"\x00\x12)\n\x0f\x44\x65leteTimetable\x12\t.Schedule\x1a\t.Schedule\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0eshowtime.proto\")\n\tSchedules\x12\x0c\n\x04\x64\x61te\x18\x01 \x01(\t\x12\x0e\n\x06movies\x18\x02 \x03(\t\"\x14\n\x04\x44\x61te\x12\x0c\n\x04\x64\x61te\x18\x01 \x01(\t\"\n\n\x08\x45mptyStr\"\x1b\n\nMovieTitle\x12\r\n\x05title\x18\x01 \x01(\t\"\"\n\x04Slot\x12\x0c\n\x04\x64\x61te\x18\x01 \x01(\t\x12\x0c\n\x04time\x18\x02 \x01(\t2`\n\x08Showtime\x12)\n\x0cGetTimetable\x12\t.EmptyStr\x1a\n.Schedules\"\x00\x30\x01\x12)\n\x12GetTimetableByDate\x12\x05.Date\x1a\n.Schedules\"\x00\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -21,16 +21,16 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'showtime_pb2', _globals)
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
-  _globals['_SCHEDULE']._serialized_start=18
-  _globals['_SCHEDULE']._serialized_end=58
-  _globals['_DATE']._serialized_start=60
-  _globals['_DATE']._serialized_end=80
-  _globals['_EMPTY']._serialized_start=82
-  _globals['_EMPTY']._serialized_end=89
-  _globals['_MOVIETITLE']._serialized_start=91
-  _globals['_MOVIETITLE']._serialized_end=118
-  _globals['_SLOT']._serialized_start=120
-  _globals['_SLOT']._serialized_end=154
-  _globals['_SHOWTIME']._serialized_start=157
-  _globals['_SHOWTIME']._serialized_end=424
+  _globals['_SCHEDULES']._serialized_start=18
+  _globals['_SCHEDULES']._serialized_end=59
+  _globals['_DATE']._serialized_start=61
+  _globals['_DATE']._serialized_end=81
+  _globals['_EMPTYSTR']._serialized_start=83
+  _globals['_EMPTYSTR']._serialized_end=93
+  _globals['_MOVIETITLE']._serialized_start=95
+  _globals['_MOVIETITLE']._serialized_end=122
+  _globals['_SLOT']._serialized_start=124
+  _globals['_SLOT']._serialized_end=158
+  _globals['_SHOWTIME']._serialized_start=160
+  _globals['_SHOWTIME']._serialized_end=256
 # @@protoc_insertion_point(module_scope)

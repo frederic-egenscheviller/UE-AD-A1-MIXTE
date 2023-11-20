@@ -3,6 +3,7 @@ syntax = "proto3";
 service Booking {
     rpc GetListBookings(Empty) returns (stream BookingData) {}
     rpc GetBookingByID(BookingID) returns (BookingData) {}
+    rpc CreateBooking(BookingData) returns (BookingData) {}
 }
 
 message BookingID {
