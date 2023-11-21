@@ -130,7 +130,6 @@ def create_booking():
                 booking_pb2.BookingData(userId=req['userid'], schedules=schedules_list))
             channel.close()
             response = json.loads(MessageToJson(booking_response))
-            print(response)
             if response["userId"] == "Not add":
                 return make_response(jsonify({"error": "one of selected movies is not available for these date"}),
                                      409)
