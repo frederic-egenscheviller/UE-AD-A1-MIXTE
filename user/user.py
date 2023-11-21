@@ -130,10 +130,11 @@ def create_booking():
                 booking_pb2.BookingData(userId=req['userid'], schedules=schedules_list))
             channel.close()
             response = json.loads(MessageToJson(booking_response))
-            if response["userid"] == "Not add":
+            print(response)
+            if response["userId"] == "Not add":
                 return make_response(jsonify({"error": "one of selected movies is not available for these date"}),
                                      409)
-            if response["userid"] == "A booking already exists for this user":
+            if response["userId"] == "A booking already exists for this user":
                 return make_response(jsonify({"error": "booking already exists for this user"}), 400)
 
             return make_response(MessageToJson(booking_response), 200)
