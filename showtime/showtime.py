@@ -25,6 +25,7 @@ class ShowtimeServicer(showtime_pb2_grpc.ShowtimeServicer):
             showtime_pb2.Schedule: gRPC response object containing the showtime schedule.
         """
         for showtime in self.db:
+            # Return the showtime schedule one by one
             yield showtime_pb2.Schedules(date=showtime['date'], movies=showtime['movies'])
 
     def GetTimetableByDate(self, request, context):
@@ -41,6 +42,7 @@ class ShowtimeServicer(showtime_pb2_grpc.ShowtimeServicer):
         for showtime in self.db:
             if showtime['date'] == request.date:
                 print('Showtime found!')
+                # Return the showtime schedule found using the date
                 return showtime_pb2.Schedules(date=showtime['date'], movies=showtime['movies'])
         return showtime_pb2.Schedules(date='', movies=[])
 

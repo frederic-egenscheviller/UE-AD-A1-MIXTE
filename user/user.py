@@ -59,6 +59,7 @@ def create_user():
     """
     req = request.get_json()
 
+    # Check if request body is valid
     if all(key in req for key in ["id", "name", "last_active"]):
         if req["id"] not in [user["id"] for user in users]:
             users.append(req)
@@ -82,6 +83,7 @@ def update_user(userid):
     """
     req = request.get_json()
 
+    # Check if request body is valid
     if all(key in req for key in ["id", "name", "last_active"]):
         for user in users:
             if str(user["id"]) == str(userid):
@@ -120,9 +122,12 @@ def create_booking():
         Response: JSON response with the new booking details or an error message.
     """
     req = request.get_json()
+
+    # Check if request body is valid
     if all(key in req for key in ["userid", "dates"]):
         schedules_list = []
         for date in req["dates"]:
+            # Convert date object to gRPC message
             movies_list = [booking_pb2.Movie(id=movie_id) for movie_id in date["movies"]]
             schedules_list.append(booking_pb2.Schedule(date=date["date"], movies=movies_list))
         with grpc.insecure_channel('localhost:3201') as channel:
@@ -130,9 +135,11 @@ def create_booking():
                 booking_pb2.BookingData(userId=req['userid'], schedules=schedules_list))
             channel.close()
             response = json.loads(MessageToJson(booking_response))
+            # Check return message for errors
             if response["userId"] == "Not add":
                 return make_response(jsonify({"error": "one of selected movies is not available for these date"}),
                                      409)
+            # Check return message for errors
             if response["userId"] == "A booking already exists for this user":
                 return make_response(jsonify({"error": "booking already exists for this user"}), 400)
 
@@ -155,7 +162,9 @@ def get_user_bookings(userid):
         booking_response = booking_pb2_grpc.BookingStub(channel).GetBookingByID(booking_pb2.BookingID(id=userid))
         channel.close()
         if booking_response.userId != "":
+            # Convert gRPC message to JSON
             response = json.loads(MessageToJson(booking_response))
+            # Convert JSON to a more readable format using dictionary
             booking_to_return = {"userid": response["userId"], "dates": []}
             for schedule in response["schedules"]:
                 date_entry = {"date": schedule["date"], "movies": []}
@@ -187,6 +196,7 @@ def get_detailed_userbookings(userid):
             user_bookings = json.loads(user_bookings)
             for booking in user_bookings["schedules"]:
                 for movie in booking["movies"]:
+                    # Get movie information from Movie service
                     movie_response = requests.post(f"{MOVIE_SERVICE_URL}/graphql",
                                                    json={"query": "{ movie_with_id(_id: \"%s\") { id title director "
                                                                   "rating actors {id firstname"
@@ -198,6 +208,7 @@ def get_detailed_userbookings(userid):
             for date_info in user_bookings['schedules']:
                 movies_list = date_info.get('movies', [])
                 movie_ids = [movie.get('id', '') for movie in movies_list]
+                # Replace movie IDs with movie information
                 date_info['movies'] = movie_ids
                 for i, movie_id in enumerate(date_info['movies']):
                     date_info['movies'][i] = movie_info_map.get(movie_id, {})
