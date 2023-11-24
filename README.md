@@ -4,10 +4,13 @@ Projet universitaire visant à la découverte des API REST, GraphQL et gRPC sous
 L'ensemble de ces microservices pourrait être assimilable à un système pouvant fonctionner dans un cinéma pour la réservation de places.<br>
 
 Le TP réalisé est le TP Vert.<br>
+
 Afin de tester l'API, un fichier Json généré pour le logiciel Insomnia contenant quelques requêtes intéressantes est disponible à la racine du projet.<br>
 Pour télécharger Insomnia : https://insomnia.rest/download
 
 ## Démarrage 🚀
+
+Il faut d'abord installer les bibliothèques nécessaires pour lancer le projet. Nous vous conseillons d'utiliser PyCharm afin de le faire automatiquement dans un venv. Les bibliothèques utilisées sont repertoriées dans le fichier requirements.txt.
 
 Se placer dans les répertoires de chaque microservice et lancer la commande suivante:<br>
 
